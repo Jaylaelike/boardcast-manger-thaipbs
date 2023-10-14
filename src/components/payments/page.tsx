@@ -38,99 +38,30 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Models } from "../DashBoard"
 
-const data: Payment[] = [
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@yahoo.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@gmail.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
-  },
-  {
-    "id": "9dv3r1w5",
-    "amount": 550,
-    "status": "success",
-    "email": "JohnDoe123@gmail.com"
-},
-{
-  "id": "5v1r3u4v",
-  "amount": 123,
-  "status": "success",
-  "email": "JaneSmith456@hotmail.com"
-},
-{
-  "id": "7r1v4e0s",
-  "amount": 342,
-  "status": "processing",
-  "email": "SarahJohnson789@yahoo.com"
-},
-{
-  "id": "d1u3r0e2v",
-  "amount": 987,
-  "status": "success",
-  "email": "MichaelBrown12@gmail.com"
-},
-{
-  "id": "2d1e3r4v",
-  "amount": 654,
-  "status": "failed",
-  "email": "ChrisWilson34@hotmail.com"
-},
-{
-  "id": "u9r3e2v0s",
-  "amount": 432,
-  "status": "processing",
-  "email": "EmilyTaylor56@yahoo.com"
-},
-{
-  "id": "i8d3e7r5v",
-  "amount": 567,
-  "status": "failed",
-  "email": "RobertClark23@yahoo.com"
-},
-{
-  "id": "4d1u2r3v",
-  "amount": 987,
-  "status": "success",
-  "email": "LindaWhite45@gmail.com"
+import moment from "moment";
+
+
+// export type Models = {
+//   time: Date
+//   Center: string;
+//   Station: string;
+//   Device_Name: string;
+//   IP: string;
+//   Lock_Carrier: string;
+//   C_N: string;
+//   Link_Margin: string;
+//   EbNo: string;
+//   Status: string;
+// }
+
+interface DataProps {
+  data : Models[];
 }
 
 
-
-]
-
-export type Payment = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
-}
-
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Models>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -151,89 +82,125 @@ export const columns: ColumnDef<Payment>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "status",
+    accessorKey: "Status",
     header: "Status",
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("status")}</div>
     ),
   },
   {
-    accessorKey: "email",
+    accessorKey: "time",
+    header:  ({ column }) =>{
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "desc")}
+        >
+          time
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const date = moment(row.getValue("time"));
+      return <div className="datetime">{date.format('DD-MM-YYYY HH:mm:ss')}</div>
+    }
+    }
+,
+
+  {
+    accessorKey: "Link_Margin",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          Link_Margin
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       )
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    cell: ({ row }) => <div className="lowercase">{row.getValue("Link_Margin")}</div>,
   },
   {
-    accessorKey: "amount",
+    accessorKey: "Station",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Amount
+          Center
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       )
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("amount")}</div>,
+    cell: ({ row }) => <div className="lowercase">{row.getValue("Station")}</div>,
   },
   {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
-
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount)
-
-      return <div className="text-right font-medium">{formatted}</div>
-    },
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original
-
+    accessorKey: "C_N",
+    header: ({ column }) => {
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          C_N
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
       )
     },
+    cell: ({ row }) => <div className="lowercase">{row.getValue("C_N")}</div>,
   },
+  
+   {
+    accessorKey: "EbNo",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          EbNo
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div className="lowercase">{row.getValue("EbNo")}</div>,
+   }
+  // {
+  //   id: "actions",
+  //   enableHiding: false,
+  //   cell: ({ row }) => {
+  //     const payment = row.original
+
+  //     return (
+  //       <DropdownMenu>
+  //         <DropdownMenuTrigger asChild>
+  //           <Button variant="ghost" className="h-8 w-8 p-0">
+  //             <span className="sr-only">Open menu</span>
+  //             <DotsHorizontalIcon className="h-4 w-4" />
+  //           </Button>
+  //         </DropdownMenuTrigger>
+  //         <DropdownMenuContent align="end">
+  //           <DropdownMenuLabel>Actions</DropdownMenuLabel>
+  //           <DropdownMenuItem
+  //             onClick={() => navigator.clipboard.writeText(payment.time.toISOString())}
+  //           >
+  //             Copy payment ID
+  //           </DropdownMenuItem>
+  //           <DropdownMenuSeparator />
+  //           <DropdownMenuItem>View customer</DropdownMenuItem>
+  //           <DropdownMenuItem>View payment details</DropdownMenuItem>
+  //         </DropdownMenuContent>
+  //       </DropdownMenu>
+  //     )
+  //   },
+  // },
 ]
 
-export function DataTableDemo() {
+export function DataTableDemo({data}: DataProps) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -266,9 +233,9 @@ export function DataTableDemo() {
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("Link_Margin")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("Link_Margin")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
