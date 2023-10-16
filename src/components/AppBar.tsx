@@ -11,8 +11,9 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
+//  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
+import { ModeToggle } from "./ui/mode-toggle";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -86,6 +87,7 @@ export  default function AppBar() {
               <ListItem href="/docs/primitives/typography" title="Typography">
                 Styles for headings, paragraphs, lists...etc
               </ListItem>
+            
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
@@ -123,16 +125,24 @@ export  default function AppBar() {
           </NavigationMenuContent>
         </NavigationMenuItem>
 
-        
         <NavigationMenuItem>
-          {/* <Link 
+        <div className="flex justify-start  mx-auto ">
+            <ModeToggle />
+          </div> 
+        </NavigationMenuItem>
+
+
+
+{/*         
+        <NavigationMenuItem>
+          <Link 
             to="/docs"
            >
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
               Documentation
             </NavigationMenuLink>
-          </Link> */}
-        </NavigationMenuItem>
+          </Link>
+        </NavigationMenuItem> */}
       </NavigationMenuList>
     </NavigationMenu>
   )

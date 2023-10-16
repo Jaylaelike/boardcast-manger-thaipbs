@@ -3,7 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import DashBoard from "./components/DashBoard";
 import NotFound from "./NotFound";
 import CardAuth from "./components/CardAuth";
-import {DataTableDemo }from "./components/payments/page";
+
+import Loading from "./components/Loading";
 
 
 export default function App() {
@@ -33,7 +34,7 @@ export default function App() {
           element={
             <>
               <NavBar />
-            <DataTableDemo  />
+              <Loading WidghtLoadingProps="250"/>
             </>
           }
         />

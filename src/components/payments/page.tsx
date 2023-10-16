@@ -42,20 +42,6 @@ import { Models } from "../DashBoard"
 
 import moment from "moment";
 
-
-// export type Models = {
-//   time: Date
-//   Center: string;
-//   Station: string;
-//   Device_Name: string;
-//   IP: string;
-//   Lock_Carrier: string;
-//   C_N: string;
-//   Link_Margin: string;
-//   EbNo: string;
-//   Status: string;
-// }
-
 interface DataProps {
   data : Models[];
 }

@@ -30,8 +30,9 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import moment from "moment";
 import StationList from "./StationList";
-
-
+import Loading from "./Loading";
+import { Box, CircularProgress } from "@mui/material";
+import { ThreeCircles } from "react-loader-spinner";
 const times = [
   {
     value: "10",
@@ -82,13 +83,13 @@ function DashBoard() {
 
   console.log(data);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  // if (isLoading) {
+  //   return <div>Loading...</div>;
+  // }
 
-  if (isError) {
-    return <div>Error fetching data</div>;
-  }
+  // if (isError) {
+  //   return <div>Error fetching data</div>;
+  // }
 
   // Fetch data based on the query
   async function fetchData() {
@@ -113,40 +114,75 @@ function DashBoard() {
 
   return (
     <>
-      <div className="grid justify-items-end p-3">
-        <StationList onOptionSelected={handleOptionSelected} />
-        {selectTimeItems(open, setOpen, timesValue, setTimeValue)}
-      </div>
-      <div className="p-2">
-        <div className="grid justify-items-stretch">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="col-span-4">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Station</CardTitle>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  className="h-4 w-4 text-muted-foreground"
-                >
-                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                </svg>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{data?.[0]?.Station}</div>
-                <p className="text-xs text-muted-foreground">
-                  Time: {moment(data?.[0]?.time).format("DD-MM-YYYY HH:mm:ss")}
-                </p>
-              </CardContent>
-            </Card>
+      {isError ? (
+        <>
+          <div className="mx-auto flex flex-col items-center justify-center space-y-2 pb-2 w-screen">
+            <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight transition-colors first:mt-0 text-red-500">
+              Error Fetching data...
+            </h2>
+            <Box sx={{ display: "flex" }}>
+              <CircularProgress />
+            </Box>
           </div>
-        </div>
-      </div>
-
+        </>
+      ) : (
+        <>
+          <div className="grid justify-items-end p-3">
+            <StationList onOptionSelected={handleOptionSelected} />
+            {selectTimeItems(open, setOpen, timesValue, setTimeValue)}
+          </div>
+          <div className="p-2">
+            <div className="grid justify-items-stretch">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+                {isLoading ? (
+                  <Loading WidghtLoadingProps="250" />
+                ) : (
+                  <>
+                   
+                      <Card className="col-span-4 flex">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                          <CardTitle className="text-xl font-medium">
+                            Station
+                          </CardTitle>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            className="h-4 w-4 text-muted-foreground"
+                          >
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                          </svg>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="text-2xl font-bold pb-2">
+                            {data?.[0]?.Station}
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            Time:{" "}
+                            {moment(data?.[0]?.time).format(
+                              "DD-MM-YYYY HH:mm:ss"
+                            )}
+                          </p>
+                        </CardContent>
+                        <div className="col-span-4 flex-col p-3">
+                          <img 
+                            src="https://res.cloudinary.com/satjay/image/upload/v1697446586/fi1tishluwpcypqyr41y.png"
+                            alt="IRD Image"
+                          />
+                        </div>
+                      </Card>
+                 
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
       <CardStat stationValue={stationValue} timesValue={timesValue} />
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
@@ -158,17 +194,51 @@ function DashBoard() {
             <Chart stationValue={stationValue} timesValue={timesValue} />
           </CardContent>
         </Card>
+
         <Card className="col-span-3">
           <CardHeader>
             <CardTitle>Recent Data</CardTitle>
             <CardDescription>You made 265 sales this month.</CardDescription>
           </CardHeader>
-          <CardContent>
+
+          
+      {isLoading ? (
+        <div className="flex justify-center items-center p-1">
+          <ThreeCircles
+            height="100"
+            width="100"
+            color="#E11D48"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+            ariaLabel="three-circles-rotating"
+            outerCircleColor=""
+            innerCircleColor=""
+            middleCircleColor=""
+          />
+        </div>
+      ) : 
+      isError ? (
+        <div className="flex justify-center items-center p-2">
+         <>
+            <div className="mx-auto flex flex-col items-center justify-center space-y-2 pb-2 w-screen">
+              <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight transition-colors first:mt-0 text-red-500">
+                Error Fetching data...
+              </h2>
+              <Box sx={{ display: "flex" }}>
+                <CircularProgress />
+              </Box>
+            </div>
+          </>
+        </div>
+      ) : 
+      (
+        <CardContent>
             <DataTableDemo data={data || []} />
-
-            
-
           </CardContent>
+      ) 
+         
+      }
         </Card>
       </div>
     </>

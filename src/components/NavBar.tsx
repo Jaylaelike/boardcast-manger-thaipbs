@@ -1,5 +1,5 @@
 import AppBar from "./AppBar";
-import { ModeToggle } from "./ui/mode-toggle";
+//import { ModeToggle } from "./ui/mode-toggle";
 import { ThemeProvider } from "./ui/theme-provider";
 
 function NavBar() {
@@ -7,9 +7,9 @@ function NavBar() {
     <>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <div className="p-2">
-          <div className="flex justify-start  mx-auto ">
+          {/* <div className="flex justify-start  mx-auto ">
             <ModeToggle />
-          </div>
+          </div> */}
           <div className="flex justify-center mx-auto">
             <AppBar />
           </div>
