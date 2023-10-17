@@ -19,8 +19,8 @@ interface Models {
 }
 
 interface Props {
-  timesValue: string;
-  stationValue: string;
+  timesValue: string | null;
+  stationValue: string | null;
 }
 
 function CardStat({ stationValue, timesValue }: Props) {
@@ -80,7 +80,7 @@ function CardStat({ stationValue, timesValue }: Props) {
             <div className="flex-1 space-y-4 p-8 pt-6">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mx-auto">
                 {isLoading ? (
-                 <Loading WidghtLoadingProps="250"  />
+                  <Loading WidghtLoadingProps="250" />
                 ) : (
                   <>
                     <Card>
@@ -114,7 +114,7 @@ function CardStat({ stationValue, timesValue }: Props) {
                 )}
 
                 {isLoading ? (
-               <Loading WidghtLoadingProps="250"  />
+                  <Loading WidghtLoadingProps="250" />
                 ) : (
                   <>
                     <Card>
@@ -151,7 +151,7 @@ function CardStat({ stationValue, timesValue }: Props) {
                 )}
 
                 {isLoading ? (
-                <Loading WidghtLoadingProps="250"  />
+                  <Loading WidghtLoadingProps="250" />
                 ) : (
                   <>
                     <Card>
@@ -186,7 +186,7 @@ function CardStat({ stationValue, timesValue }: Props) {
                 )}
 
                 {isLoading ? (
-                 <Loading WidghtLoadingProps="250"  />
+                  <Loading WidghtLoadingProps="250" />
                 ) : (
                   <>
                     <Card>

@@ -17,8 +17,30 @@ interface Station {
   Status: string;
 }
 
+const times = [
+  {
+    values: "10",
+    label: "10 days",
+  },
+  {
+    values: "15",
+    label: "15 days",
+  },
+  {
+    values: "20",
+    label: "20 days",
+  },
+];
+
+interface TimesProps {
+
+  values: string;
+  label: string;
+}
+
 interface StationListProps {
   onOptionSelected: (value: string) => void;
+  onOptionSelectedTimes: (value: string) => void;
 
 }
   
@@ -27,10 +49,13 @@ interface StationListProps {
 
 function StationList({
   onOptionSelected,
+  onOptionSelectedTimes
 
 }: StationListProps): JSX.Element {
   const [options, setOptions] = useState<Station[]>([]);
   const [selectedValue, setSelectedValue] = useState<Station | null>(null);
+  const [selectedTimes, setSelectedTimes] = useState<TimesProps | null>(null);
+  const [optionsTimes, setOptionsTimes] = useState<TimesProps[]>([]);
 
   useEffect(() => {
     fetchDataFromAPI()
@@ -49,6 +74,13 @@ function StationList({
     }
   };
 
+  //fect data from times[]
+  useEffect(() => {
+    setOptionsTimes(times);
+  }, []);
+
+
+
   const handleOptionSelected = (
     _event: React.ChangeEvent<unknown>,
     value: Station | null
@@ -58,6 +90,17 @@ function StationList({
       onOptionSelected(value.Station);
     }
   };
+
+  const handleOptionSelectedTimes = (
+    _event: React.ChangeEvent<unknown>,
+    value: TimesProps | null
+  ) => {
+    setSelectedTimes(value);
+    if (value) {
+      onOptionSelectedTimes(value.values);
+    }
+  };
+
 
 
   const darkTheme = createTheme({
@@ -78,12 +121,24 @@ function StationList({
         getOptionLabel={(option) => option.Station}
         onChange={handleOptionSelected}
         value={selectedValue}
-        sx={{ width: 300 }}
+        sx={{ width: 200}}
         renderInput={(params: object) => (
           <TextField {...params} label= "สถานี" />
         )}
       />
-    
+      
+       <Autocomplete
+      disablePortal
+      id="combo-box-demo"
+      options={ optionsTimes}
+      getOptionLabel={(option) => option.values}
+      onChange={handleOptionSelectedTimes}
+      value={selectedTimes}
+      sx={{ width: 200}}
+      renderInput={(params) => <TextField {...params} label="Times" />}
+    />
+
+
     
     </ScopedCssBaseline>
     </ThemeProvider>

@@ -19,9 +19,11 @@ interface Models {
 }
 
 interface Props {
-  timesValue: string;
-  stationValue: string;
+  timesValue: string | null;
+  stationValue: string | null;
 }
+
+
 
 function Chart({ stationValue, timesValue }: Props) {
   // Create a query using react-query
