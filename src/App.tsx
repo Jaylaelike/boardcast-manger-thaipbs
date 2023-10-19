@@ -4,7 +4,11 @@ import DashBoard from "./components/DashBoard";
 import NotFound from "./NotFound";
 import CardAuth from "./components/CardAuth";
 
-import Loading from "./components/Loading";
+
+import Home from "./components/Home";
+
+import MiniGraphTest from "./components/MiniGraphTest";
+
 
 
 export default function App() {
@@ -30,11 +34,21 @@ export default function App() {
           }
         />
           <Route
-          path="/table"
+          path="/minigraph"
           element={
             <>
               <NavBar />
-              <Loading WidghtLoadingProps="250"/>
+              <MiniGraphTest/>
+            </>
+          }
+        />
+          <Route
+          path="/home"
+          element={
+            <>
+              <NavBar />
+              <Home />
+            
             </>
           }
         />
