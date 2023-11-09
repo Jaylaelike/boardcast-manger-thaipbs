@@ -10,4 +10,8 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  preview: {
+    host: true,
+    port: 5173, // you can replace this port with any port
+  } // you can replace this port with any port
 });
