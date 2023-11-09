@@ -70,7 +70,7 @@ function DashBoard() {
   // Fetch data based on the query
   async function fetchData() {
     const res = await axios.get(
-      "http://192.168.1.198:4000/api/ird_range/" + `${q}` + "/" + `${t}`
+      import.meta.env.VITE_IRD_RANGE_URL + `${q}` + "/" + `${t}`
     );
 
     if (res.status >= 200 && res.status < 300) {

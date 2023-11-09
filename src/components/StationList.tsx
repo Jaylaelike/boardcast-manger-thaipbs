@@ -66,7 +66,7 @@ function StationList({
   const fetchDataFromAPI = async () => {
     try {
       const response = await axios.get<Station[]>(
-        "http://192.168.1.198:4000/api/station/Station"
+        import.meta.env.VITE_IRD_STATION_URL
       );
       return response.data;
     } catch (error) {
