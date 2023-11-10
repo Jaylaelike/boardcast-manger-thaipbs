@@ -29,6 +29,7 @@ export interface Models {
   Link_Margin: string;
   EbNo: string;
   Status: string;
+  Station_Thai: string;
 }
 
 function DashBoard() {
@@ -37,7 +38,7 @@ function DashBoard() {
   // const [stationValue, setStationValue] = useState("1.chp_m");
 
   const [stationValue, setStationValue] = useSearchParams({
-    q: "1.chp_m",
+    q: "ชุมพร",
     t: "10",
   });
   const q: string | null = stationValue.get("q");
@@ -147,7 +148,7 @@ function DashBoard() {
                       </CardHeader>
                       <CardContent>
                         <div className="text-2xl font-bold pb-2">
-                          {data?.[0]?.Station}
+                          {data?.[0]?.Station_Thai}
                         </div>
                         <p className="text-xs text-muted-foreground">
                           Time:{" "}

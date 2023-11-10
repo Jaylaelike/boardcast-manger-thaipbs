@@ -15,6 +15,7 @@ interface Station {
   Link_Margin: string;
   EbNo: string;
   Status: string;
+  Station_Thai: string;
 }
 
 const times = [
@@ -87,7 +88,7 @@ function StationList({
   ) => {
     setSelectedValue(value);
     if (value) {
-      onOptionSelected(value.Station);
+      onOptionSelected(value.Station_Thai);
     }
   };
 
@@ -118,7 +119,7 @@ function StationList({
         disablePortal
         id="combo-box-demo"
         options={options}
-        getOptionLabel={(option) => option.Station}
+        getOptionLabel={(option) => option.Station_Thai}
         onChange={handleOptionSelected}
         value={selectedValue}
         sx={{ width: 200}}
