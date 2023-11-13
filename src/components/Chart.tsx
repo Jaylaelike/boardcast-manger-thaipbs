@@ -94,7 +94,7 @@ function Chart({ stationValue, timesValue }: Props) {
       xaxis: {
         type: "datetime",
         labels: {
-          datetimeUTC: false,
+          datetimeUTC: true,
         },
       },
       yaxis: {
@@ -166,7 +166,7 @@ function Chart({ stationValue, timesValue }: Props) {
                 xaxis: {
                   type: "datetime",
                   labels: {
-                    datetimeUTC: false,
+                    datetimeUTC: true,
                   },
                 },
                 yaxis: {

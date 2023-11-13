@@ -117,7 +117,7 @@ export const columns: ColumnDef<Models>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Center
+          Station
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       )

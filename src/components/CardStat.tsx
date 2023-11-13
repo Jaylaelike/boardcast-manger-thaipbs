@@ -3,7 +3,12 @@ import { ThemeProvider } from "./ui/theme-provider";
 import axios from "axios";
 import { useQuery } from "react-query";
 import Loading from "./Loading";
-import { Box, CircularProgress } from "@mui/material";
+import { Box } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
+import "react-circular-progressbar/dist/styles.css";
+import GuageForCN from "./Guage/GuageForCN";
+import GuageForLM from "./Guage/GuageForLM";
+import GuageForEbno from "./Guage/GuageForEbno";
 
 interface Models {
   time: Date;
@@ -12,15 +17,16 @@ interface Models {
   Device_Name: string;
   IP: string;
   Lock_Carrier: string;
-  C_N: string;
-  Link_Margin: string;
-  EbNo: string;
+  C_N: number;
+  Link_Margin: number;
+  EbNo: number;
   Status: string;
 }
 
 interface Props {
   timesValue: string | null;
   stationValue: string | null;
+
 }
 
 function CardStat({ stationValue, timesValue }: Props) {
@@ -108,6 +114,10 @@ function CardStat({ stationValue, timesValue }: Props) {
                         <p className="text-xs text-muted-foreground">
                           +180.1% from last month
                         </p>
+
+                        <div className="flex justify-end">
+                          <GuageForCN data={data} />
+                        </div>
                       </CardContent>
                     </Card>
                   </>
@@ -145,6 +155,9 @@ function CardStat({ stationValue, timesValue }: Props) {
                         <p className="text-xs text-muted-foreground">
                           +180.1% from last month
                         </p>
+                        <div className="flex justify-end">
+                          <GuageForLM data={data} />
+                        </div>
                       </CardContent>
                     </Card>
                   </>
@@ -180,6 +193,9 @@ function CardStat({ stationValue, timesValue }: Props) {
                         <p className="text-xs text-muted-foreground">
                           +19% from last month
                         </p>
+                        <div className="flex justify-end">
+                          <GuageForEbno data={data} />
+                        </div>
                       </CardContent>
                     </Card>
                   </>

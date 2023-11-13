@@ -152,7 +152,7 @@ function DashBoard() {
                         </div>
                         <p className="text-xs text-muted-foreground">
                           Time:{" "}
-                          {moment(data?.[0]?.time).format(
+                          {moment.utc(data?.[0]?.time).format(
                             "DD-MM-YYYY HH:mm:ss"
                           )}
                         </p>
