@@ -42,4 +42,3 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: jaylaelove/broadcast-frontend-thaipbs:latest
-          labels: ${{ steps.meta.outputs.labels }}
