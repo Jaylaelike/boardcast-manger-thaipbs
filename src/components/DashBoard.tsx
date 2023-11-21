@@ -11,12 +11,16 @@ import {
 } from "./ui/card";
 import { useQuery } from "react-query";
 import axios from "axios";
-import moment from "moment";
+import dayjs from "dayjs";
 import StationList from "./StationList";
 import Loading from "./Loading";
 import { Box, CircularProgress } from "@mui/material";
 import { ThreeCircles } from "react-loader-spinner";
 import { useSearchParams } from "react-router-dom";
+import utc from 'dayjs/plugin/utc';
+
+// Use the UTC plugin
+dayjs.extend(utc);
 
 export interface Models {
   time: Date;
@@ -32,6 +36,8 @@ export interface Models {
   Station_Thai: string;
 }
 
+
+
 function DashBoard() {
   // const [openStation, setOpenStation] = useState(false);
   // const [open, setOpen] = useState(false);
@@ -39,7 +45,7 @@ function DashBoard() {
 
   const [stationValue, setStationValue] = useSearchParams({
     q: "ชุมพร",
-    t: "10",
+    t: "3",
   });
   const q: string | null = stationValue.get("q");
   const t: string | null = stationValue.get("t");
@@ -50,13 +56,27 @@ function DashBoard() {
   const { data, isLoading, isError } = useQuery<Models[]>({
     queryKey: ["orders", q, t],
     queryFn: fetchData,
+    cacheTime: 5000,
     refetchOnMount: true,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
-    refetchInterval: 5000,
+    refetchInterval: 60000, // for 1 minute interval
     onSuccess: () => console.log("data fetched with no problem"),
     onError: () => console.log("error fetching data"),
   });
+
+
+  // const queryClient = useQueryClient();
+  // const { data, isError, isLoading } = useMutation<Models[]>({
+  //   mutationFn: fetchData,
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: ['orders' ,q ,t] });
+  //     console.log("data fetched with no problem");
+  //   },
+  //   onError: () => {
+  //     console.log("error fetching data");
+  //   },
+  // });
 
   console.log(data);
 
@@ -129,22 +149,11 @@ function DashBoard() {
                 ) : (
                   <>
                     <Card className="col-span-4 flex">
-                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardHeader className="flex flex-row items-top justify-between space-y-0 pb-2">
                         <CardTitle className="text-xl font-medium">
-                          Station
+                          Station 
                         </CardTitle>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          className="h-4 w-4 text-muted-foreground"
-                        >
-                          <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                        </svg>
+                 
                       </CardHeader>
                       <CardContent>
                         <div className="text-2xl font-bold pb-2">
@@ -152,9 +161,11 @@ function DashBoard() {
                         </div>
                         <p className="text-xs text-muted-foreground">
                           Time:{" "}
-                          {moment.utc(data?.[0]?.time).format(
-                            "DD-MM-YYYY HH:mm:ss"
-                          )}
+                          {
+                            dayjs(data?.[0]?.time).utcOffset(0).format("DD-MM-YYYY HH:mm:ss")
+                          }
+
+
                         </p>
                       </CardContent>
                       <div className="col-span-4 flex-col p-3">
@@ -186,7 +197,7 @@ function DashBoard() {
         <Card className="col-span-3">
           <CardHeader>
             <CardTitle>Recent Data</CardTitle>
-            <CardDescription>You made 265 sales this month.</CardDescription>
+            <CardDescription>IRD data event for time serires.</CardDescription>
           </CardHeader>
 
           {isLoading ? (
@@ -229,6 +240,7 @@ function DashBoard() {
 }
 
 export default DashBoard;
+
 
 // function selectTimeItems(
 //   open: boolean,

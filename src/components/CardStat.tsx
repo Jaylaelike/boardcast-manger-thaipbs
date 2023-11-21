@@ -26,7 +26,6 @@ interface Models {
 interface Props {
   timesValue: string | null;
   stationValue: string | null;
-
 }
 
 function CardStat({ stationValue, timesValue }: Props) {
@@ -35,9 +34,10 @@ function CardStat({ stationValue, timesValue }: Props) {
     queryKey: ["orders", stationValue, timesValue],
     queryFn: fetchData,
     refetchOnMount: true,
+    cacheTime: 5000,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
-    refetchInterval: 5000,
+    refetchInterval: 60000, // for 1 minute interval
     onSuccess: () => console.log("data fetched with no problem"),
     onError: () => console.log("error fetching data"),
   });
@@ -112,7 +112,7 @@ function CardStat({ stationValue, timesValue }: Props) {
                           {data?.[0]?.C_N} dBc{" "}
                         </div>
                         <p className="text-xs text-muted-foreground">
-                          +180.1% from last month
+                          {/* +180.1% from last month */}
                         </p>
 
                         <div className="flex justify-end">
@@ -153,7 +153,7 @@ function CardStat({ stationValue, timesValue }: Props) {
                           {data?.[0]?.Link_Margin} dB{" "}
                         </div>
                         <p className="text-xs text-muted-foreground">
-                          +180.1% from last month
+                          {/* +180.1% from last month */}
                         </p>
                         <div className="flex justify-end">
                           <GuageForLM data={data} />
@@ -191,7 +191,7 @@ function CardStat({ stationValue, timesValue }: Props) {
                           {data?.[0]?.EbNo}
                         </div>
                         <p className="text-xs text-muted-foreground">
-                          +19% from last month
+                          {/* +19% from last month */}
                         </p>
                         <div className="flex justify-end">
                           <GuageForEbno data={data} />
@@ -228,7 +228,7 @@ function CardStat({ stationValue, timesValue }: Props) {
                           {data?.[0]?.Status}
                         </div>
                         <p className="text-xs text-muted-foreground">
-                          +201 since last hour
+                          {/* +201 since last hour */}
                         </p>
                       </CardContent>
                     </Card>

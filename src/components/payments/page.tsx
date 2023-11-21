@@ -1,10 +1,5 @@
-
-import * as React from "react"
-import {
-  CaretSortIcon,
-  ChevronDownIcon,
-  DotsHorizontalIcon,
-} from "@radix-ui/react-icons"
+import * as React from "react";
+import { CaretSortIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -16,20 +11,17 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
+} from "@tanstack/react-table";
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -37,15 +29,19 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Models } from "../DashBoard"
+} from "@/components/ui/table";
+import { Models } from "../DashBoard";
 
-import moment from "moment";
+import dayjs from "dayjs";
+
+import utc from 'dayjs/plugin/utc';
+
+// Use the UTC plugin
+dayjs.extend(utc);
 
 interface DataProps {
-  data : Models[];
+  data: Models[];
 }
-
 
 export const columns: ColumnDef<Models>[] = [
   {
@@ -71,12 +67,12 @@ export const columns: ColumnDef<Models>[] = [
     accessorKey: "Status",
     header: "Status",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
+      <div className="capitalize">{row.getValue("Status")}</div>
     ),
   },
   {
     accessorKey: "time",
-    header:  ({ column }) =>{
+    header: ({ column }) => {
       return (
         <Button
           variant="ghost"
@@ -85,15 +81,15 @@ export const columns: ColumnDef<Models>[] = [
           time
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      const date = moment(row.getValue("time"));
-      return <div className="datetime">{date.format('DD-MM-YYYY HH:mm:ss')}</div>
-    }
-    }
-,
-
+      const date = dayjs(row.getValue("time"));
+      return (
+        <div className="datetime">{ dayjs(date).utcOffset(0).format("DD-MM-YYYY HH:mm:ss")}</div>
+      );
+    },
+  },
   {
     accessorKey: "Link_Margin",
     header: ({ column }) => {
@@ -105,9 +101,11 @@ export const columns: ColumnDef<Models>[] = [
           Link_Margin
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("Link_Margin")}</div>,
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue("Link_Margin")}</div>
+    ),
   },
   {
     accessorKey: "Station",
@@ -120,9 +118,11 @@ export const columns: ColumnDef<Models>[] = [
           Station
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("Station")}</div>,
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue("Station")}</div>
+    ),
   },
   {
     accessorKey: "C_N",
@@ -135,12 +135,12 @@ export const columns: ColumnDef<Models>[] = [
           C_N
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => <div className="lowercase">{row.getValue("C_N")}</div>,
   },
-  
-   {
+
+  {
     accessorKey: "EbNo",
     header: ({ column }) => {
       return (
@@ -151,10 +151,10 @@ export const columns: ColumnDef<Models>[] = [
           EbNo
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => <div className="lowercase">{row.getValue("EbNo")}</div>,
-   }
+  },
   // {
   //   id: "actions",
   //   enableHiding: false,
@@ -184,16 +184,18 @@ export const columns: ColumnDef<Models>[] = [
   //     )
   //   },
   // },
-]
+];
 
-export function DataTableDemo({data}: DataProps) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+export function DataTableDemo({ data }: DataProps) {
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
-  )
+  );
+
+  const [globalFilter, setGlobalFilter] = React.useState("");
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+    React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
     data,
@@ -211,20 +213,20 @@ export function DataTableDemo({data}: DataProps) {
       columnFilters,
       columnVisibility,
       rowSelection,
+      globalFilter,
     },
-  })
+  });
 
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("Link_Margin")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("Link_Margin")?.setFilterValue(event.target.value)
-          }
+          value={globalFilter ?? ""}
+          onChange={(event) => setGlobalFilter( event.target.value)}
+          placeholder="Search all columns..."
           className="max-w-sm"
         />
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -247,7 +249,7 @@ export function DataTableDemo({data}: DataProps) {
                   >
                     {column.id}
                   </DropdownMenuCheckboxItem>
-                )
+                );
               })}
           </DropdownMenuContent>
         </DropdownMenu>
@@ -267,7 +269,7 @@ export function DataTableDemo({data}: DataProps) {
                             header.getContext()
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -327,6 +329,5 @@ export function DataTableDemo({data}: DataProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }
-

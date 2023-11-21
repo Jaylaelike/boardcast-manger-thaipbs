@@ -20,16 +20,24 @@ interface Station {
 
 const times = [
   {
-    values: "10",
-    label: "10 days",
+    values: "3",
+    label: "3 days",
   },
   {
-    values: "15",
-    label: "15 days",
+    values: "5",
+    label: "5 days",
   },
   {
-    values: "20",
-    label: "20 days",
+    values: "7",
+    label: "weeks",
+  },
+  {
+    values: "14",
+    label: "2 weeks",
+  },
+  {
+    values: "30",
+    label: "Months",
   },
 ];
 
@@ -132,7 +140,7 @@ function StationList({
       disablePortal
       id="combo-box-demo"
       options={ optionsTimes}
-      getOptionLabel={(option) => option.values}
+      getOptionLabel={(option) => option.label}
       onChange={handleOptionSelectedTimes}
       value={selectedTimes}
       sx={{ width: 200}}

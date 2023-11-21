@@ -1,9 +1,13 @@
 import { useQuery } from "react-query";
 import axios from "axios";
-import moment from "moment";
+import dayjs from "dayjs";
 import ReactApexChart from "react-apexcharts";
 import { ThreeCircles } from "react-loader-spinner";
 import { Box, CircularProgress } from "@mui/material";
+import utc from 'dayjs/plugin/utc';
+
+// Use the UTC plugin
+dayjs.extend(utc);
 
 interface Models {
   time: Date;
@@ -23,17 +27,16 @@ interface Props {
   stationValue: string | null;
 }
 
-
-
 function Chart({ stationValue, timesValue }: Props) {
   // Create a query using react-query
-  const { data, isLoading , isError} = useQuery<Models[]>({
+  const { data, isLoading, isError } = useQuery<Models[]>({
     queryKey: ["orders", stationValue, timesValue],
     queryFn: fetchData,
     refetchOnMount: true,
+    cacheTime: 5000,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
-    refetchInterval: 5000,
+    refetchInterval: 60000, // for 1 minute interval
     onSuccess: () => console.log("data fetched with no problem"),
     onError: () => console.log("error fetching data"),
   });
@@ -69,7 +72,7 @@ function Chart({ stationValue, timesValue }: Props) {
         name: "Link Margin",
         data:
           data?.map((d) => ({
-            x: moment(d.time).format("MM-DD-YYYY HH:mm:ss"),
+            x: d.time,
             y: d.Link_Margin,
           })) || [],
       },
@@ -77,48 +80,12 @@ function Chart({ stationValue, timesValue }: Props) {
         name: "C/N",
         data:
           data?.map((d) => ({
-            x: moment(d.time).format("MM-DD-YYYY HH:mm:ss"),
+            x: d.time,
             y: d.C_N,
           })) || [],
       },
     ],
-    options: {
-      chart: {
-        id: "area-datetime",
-        type: "area",
-        height: 350,
-        zoom: {
-          autoScaleYaxis: true,
-        },
-      },
-      xaxis: {
-        type: "datetime",
-        labels: {
-          datetimeUTC: true,
-        },
-      },
-      yaxis: {
-        title: {
-          text: "Link Margin (dB)",
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        curve: "smooth",
-      },
-      fill: {
-        type: "gradient",
-        gradient: {
-          shadeIntensity: 1,
-          opacityFrom: 0.7,
-          opacityTo: 0.9,
-          stops: [0, 100],
-        },
-        selection: "one_year",
-      },
-    },
+
   };
 
   return (
@@ -140,7 +107,7 @@ function Chart({ stationValue, timesValue }: Props) {
         </div>
       ) : isError ? (
         <div className="flex justify-center items-center p-2">
-         <>
+          <>
             <div className="mx-auto flex flex-col items-center justify-center space-y-2 pb-2 w-screen">
               <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight transition-colors first:mt-0 text-red-500">
                 Error Fetching data...
@@ -152,50 +119,104 @@ function Chart({ stationValue, timesValue }: Props) {
           </>
         </div>
       ) : (
-            <ReactApexChart
-              options={{
-                chart: {
-                  id: "area-datetime",
-                  type: "area", // Change this to "area"
-                  height: 350,
-                  width: 350,
-                  zoom: {
-                    autoScaleYaxis: true,
-                  },
-                },
-                xaxis: {
-                  type: "datetime",
-                  labels: {
-                    datetimeUTC: true,
-                  },
-                },
-                yaxis: {
-                  title: {
-                    text: "Link Margin (dB)",
-                  },
-                },
-                dataLabels: {
-                  enabled: false,
-                },
-                stroke: {
-                  curve: "smooth",
-                },
-                fill: {
-                  type: "gradient",
-                  gradient: {
-                    shadeIntensity: 1,
-                    opacityFrom: 0.7,
-                    opacityTo: 0.9,
-                    stops: [0, 100],
-                  },
-                },
-              }}
-              series={chartData.series}
-              type="area"
-              height={300}
-            />     
-      )}
+        <ReactApexChart
+          options={{
+            chart: {
+              id: "area-datetime",
+              type: "area", // Change this to "area"
+              height: 350,
+              width: 350,
+              zoom: {
+                autoScaleYaxis: true,
+              },
+              toolbar: {
+                show: true,
+                offsetX: 0,
+                offsetY: 0,
+                tools: {
+                  download: true,
+                  selection: true,
+                  zoom: true,
+                  zoomin: true,
+                  zoomout: true,
+                  pan: true,
 
+                  customIcons: [],
+                },
+                export: {
+                  csv: {
+                    filename:
+                      "ird_event_data - " +
+                      stationValue +
+                      " - " +
+                      timesValue +
+                      "day",
+                    columnDelimiter: ",",
+                    headerCategory: "timestamp",
+                    headerValue: "data",
+                    dateFormatter(timestamp) {
+                      return  dayjs(timestamp).utcOffset(0).format('YYYY-MM-DD HH:mm:ss')
+                       ;
+                    },
+                  },
+                  svg: {
+                    filename:
+                      "ird_event_data - " +
+                      stationValue +
+                      " - " +
+                      timesValue +
+                      "day",
+                  },
+                  png: {
+                    filename:
+                      "ird_event_data - " +
+                      stationValue +
+                      " - " +
+                      timesValue +
+                      "day",
+                  },
+                },
+                autoSelected: "zoom",
+              },
+            },
+            xaxis: {
+              type: "datetime",
+              labels: {
+                datetimeUTC: true,
+                datetimeFormatter: {
+                  year: 'yyyy',
+                  month: 'MMM \'yy',
+                  day: 'dd MMM',
+                  hour: 'HH:mm'
+                }
+              },
+            },
+            yaxis: {
+              title: {
+                text: "Link Margin (dB)",
+              },
+            },
+            dataLabels: {
+              enabled: false,
+            },
+            stroke: {
+              curve: "smooth",
+            },
+            fill: {
+              type: "gradient",
+              gradient: {
+                shadeIntensity: 1,
+                opacityFrom: 0.7,
+                opacityTo: 0.9,
+                stops: [0, 100],
+              },
+            },
+          }}
+          series={chartData.series}
+          type="area"
+          height={300}
+        />
+      )}
     </>
   );
 }
